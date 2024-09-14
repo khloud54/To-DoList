@@ -15,8 +15,8 @@ Calendar integration for due date selection.
 *Motivational Messages: Display motivational quotes inside the task box to keep users motivated for 40 seconds.
 
 *Technologies Used*:
->HTML: For the structure and content of the website.
->CSS: For styling and enhancing the visual layout of the site.
->JavaScript: To add interactivity, manage tasks, and update the DOM dynamically.
->Visual Studio Code: Used as the development environment for building and managing the project.
->GitHub Pages: Used for hosting and deploying the live version of the website.
+a) HTML: For the structure and content of the website.
+b) CSS: For styling and enhancing the visual layout of the site.
+c) JavaScript: To add interactivity, manage tasks, and update the DOM dynamically.
+d) Visual Studio Code: Used as the development environment for building and managing the project.
+e) GitHub Pages: Used for hosting and deploying the live version of the website.
