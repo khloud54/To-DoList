@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Activity and Task Progress</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script> <!-- Plugin to show percentages -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background: url('img/Screenshot 2024-09-07 140000.png') no-repeat center center fixed; /* Change to your image URL */
+            background-size: cover;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 60%;
+            margin: 20px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .content {
+            width: 60%;
+        }
+        .chart-container {
+            width: 35%;
+        }
+        h2, h3 {
+            text-align: center;
+        }
+        .task-input {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .task-input input {
+            width: 70%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+        }
+        .btn {
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-todo {
+            background-color: #f39c12;
+        }
+        .btn-inprogress {
+            background-color: #3498db;
+        }
+        .btn-done {
+            background-color: #64cc6c;
+        }
+        .btn-active {
+            background-color: #e91e63;
+        }
+        .btn-save, .btn-delete {
+            background-color: #4caf50;
+            color: white;
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+        }
+        .btn-delete {
+            background-color: #e74c3c;
+        }
+        .task-list ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .task-list ul li {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .task-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        canvas {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="content">
+            <h2>Your Activity and Task Progress</h2>
+
+            <div class="task-input">
+                <input id="todo-input" placeholder="To Do task" style="background-color: #f39c12;">
+                <button class="btn btn-todo" onclick="addTask('todo')">Add To Do</button>
+            </div>
+
+            <div class="task-input">
+                <input id="inprogress-input" placeholder="In Progress task" style="background-color: #3498db;">
+                <button class="btn btn-inprogress" onclick="addTask('inprogress')">Add In Progress</button>
+            </div>
+
+            <div class="task-input">
+                <input id="done-input" placeholder="Done task" style="background-color: #64cc6c;">
+                <button class="btn btn-done" onclick="addTask('done')">Add Done</button>
+            </div>
+
+            <div class="task-input">
+                <input id="active-input" placeholder="Active Project" style="background-color: #e91e63;">
+                <button class="btn btn-active" onclick="addTask('active')">Add Active Project</button>
+            </div>
+
+            <div class="task-list">
+                <h3>Task List</h3>
+                <ul id="task-list"></ul>
+            </div>
+
+            <button class="btn-save" onclick="saveData()">Save All Tasks</button>
+            <button class="btn-delete" onclick="deleteAllTasks()">Delete All Tasks</button>
+        </div>
+
+        <div class="chart-container">
+            <h3>Task Distribution</h3>
+            <canvas id="taskChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || {
+            todo: [],
+            inprogress: [],
+            done: [],
+            active: []
+        };
+
+        function addTask(category) {
+            const inputId = category + '-input';
+            const taskText = document.getElementById(inputId).value.trim();
+            if (taskText) {
+                tasks[category].push(taskText);
+                updateTaskList();
+                updateChart();
+            }
+            document.getElementById(inputId).value = '';
+        }
+
+        function updateTaskList() {
+            const taskList = document.getElementById('task-list');
+            taskList.innerHTML = '';
+            for (let category in tasks) {
+                tasks[category].forEach(task => {
+                    const li = document.createElement('li');
+                    li.textContent = `${task} - ${category.charAt(0).toUpperCase() + category.slice(1)}`;
+                    li.style.borderLeft = `5px solid ${getCategoryColor(category)}`;
+                    taskList.appendChild(li);
+                });
+            }
+        }
+
+        function getCategoryColor(category) {
+            switch (category) {
+                case 'todo': return '#f39c12';
+                case 'inprogress': return '#3498db';
+                case 'done': return '#64cc6c';
+                case 'active': return '#e91e63';
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            alert('Tasks saved!');
+        }
+
+        function deleteAllTasks() {
+            if (confirm('Are you sure you want to delete all tasks?')) {
+                tasks = { todo: [], inprogress: [], done: [], active: [] };
+                updateTaskList();
+                updateChart();
+                localStorage.removeItem('tasks');
+                alert('All tasks have been deleted!');
+            }
+        }
+
+        function updateChart() {
+            const ctx = document.getElementById('taskChart').getContext('2d');
+            const taskCounts = {
+                todo: tasks.todo.length,
+                inprogress: tasks.inprogress.length,
+                done: tasks.done.length,
+                active: tasks.active.length
+            };
+            const totalTasks = taskCounts.todo + taskCounts.inprogress + taskCounts.done + taskCounts.active;
+            const data = {
+                labels: ['To Do', 'In Progress', 'Done', 'Active Projects'],
+                datasets: [{
+                    data: [taskCounts.todo, taskCounts.inprogress, taskCounts.done, taskCounts.active],
+                    backgroundColor: ['#f39c12', '#3498db', '#64cc6c', '#e91e63']
+                }]
+            };
+            const options = {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    datalabels: {
+                        formatter: (value, context) => {
+                            const percentage = totalTasks > 0 ? (value / totalTasks * 100).toFixed(2) + '%' : '0%';
+                            return percentage;
+                        },
+                        color: '#fff',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            };
+
+            if (window.taskChartInstance) {
+                window.taskChartInstance.destroy();
+            }
+
+            window.taskChartInstance = new Chart(ctx, {
+                type: 'pie',
+                data: data,
+                options: options,
+                plugins: [ChartDataLabels]
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTaskList();
+            updateChart();
+        });
+    </script>
+
+</body>
+</html>

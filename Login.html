@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('img/14042784.jpg'); /* Path to your background image */
+            background-size: cover; /* Ensures the background covers the entire screen */
+            background-position: center; /* Centers the background image */
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #8f7be9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2f427f;
+        }
+        p {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Enter Email" required>
+    <input type="password" id="password" placeholder="Enter Password" required>
+    <button onclick="login()">Login</button>
+    <p id="login-error" style="color: red;"></p>
+    <p>Don't have an account? <a href="signup.html">Signup</a></p>
+</div>
+
+<script>
+    const apiUrl = 'https://reqres.in/api/login';
+
+    function login() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        if (!email || !password) {
+            document.getElementById('login-error').textContent = 'Please enter email and password';
+            return;
+        }
+
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, password: password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                alert('Login successful! Redirecting to task list...');
+                window.location.href = 'Homepage.html'; // Redirect to your Homepage
+            } else {
+                document.getElementById('login-error').textContent = 'Invalid credentials';
+            }
+        })
+        .catch(() => {
+            document.getElementById('login-error').textContent = 'Login failed, try again';
+        });
+    }
+</script>
+
+</body>
+</html>

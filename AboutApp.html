@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About This App</title>
+    <style>
+        /* Default light mode background */
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('white-bg.jpg'); /* Add your light mode background image URL here */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background-color 0.3s, color 0.3s, background-image 0.3s;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Light mode container background */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 500px; /* Increased width */
+            max-width: 100%; /* Ensure responsiveness */
+            text-align: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container h2 {
+            margin-bottom: 20px;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .buttons button {
+            background-color: #5a2777;
+            color: rgb(255, 255, 255);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .buttons button:hover {
+            background-color: #a173b6;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-image: url('img/Screenshot 2024-09-12 133539.png'); /* Add your dark mode background image URL here */
+            background-color: #121212;
+        }
+
+        .container.dark-mode {
+            background-color: #1e1e1e;
+        }
+
+        .quote.dark-mode {
+            color: #e0e0e0;
+        }
+
+        .buttons button.dark-mode {
+            background-color: #3a1f57;
+        }
+
+        .buttons button.dark-mode:hover {
+            background-color: #7c4d9a;
+        }
+
+        /* Toggle Switch Styles */
+        .toggle-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .toggle-container input {
+            display: none;
+        }
+
+        .toggle-label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-label .toggle-slider {
+            width: 34px;
+            height: 20px;
+            background-color: #ccc;
+            border-radius: 50px;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: #fff;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #4caf50;
+        }
+
+        input:checked + .toggle-slider::before {
+            transform: translateX(14px);
+        }
+    </style>
+</head>
+<body>
+    <div class="toggle-container">
+        <label class="toggle-label">
+            <input type="checkbox" id="toggleSwitch">
+            <span class="toggle-slider"></span>
+        </label>
+    </div>
+
+    <div class="container">
+        <h2>About This App</h2>
+        <p class="quote">"Managing your tasks has never been easier with our intuitive to-do list app."</p>
+        <div class="buttons">
+            <button onclick="contactUs()">Contact us Via E-mail!</button>
+            <button onclick="giveFeedback()">Give us feedback!</button>
+            <button onclick="goHome()">Back to home</button>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode toggle functionality
+        const toggleSwitch = document.getElementById('toggleSwitch');
+        const body = document.body;
+        const container = document.querySelector('.container');
+        const quote = document.querySelector('.quote');
+        const buttons = document.querySelectorAll('.buttons button');
+
+        // Load the saved theme from localStorage
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            container.classList.add('dark-mode');
+            quote.classList.add('dark-mode');
+            buttons.forEach(button => button.classList.add('dark-mode'));
+            toggleSwitch.checked = true;
+        }
+
+        toggleSwitch.addEventListener('change', () => {
+            if (toggleSwitch.checked) {
+                body.classList.add('dark-mode');
+                container.classList.add('dark-mode');
+                quote.classList.add('dark-mode');
+                buttons.forEach(button => button.classList.add('dark-mode'));
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                container.classList.remove('dark-mode');
+                quote.classList.remove('dark-mode');
+                buttons.forEach(button => button.classList.remove('dark-mode'));
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        function contactUs() {
+            window.location.href = "mailto:kh.t705042000@gmail.com";
+        }
+
+        function giveFeedback() {
+            window.location.href = "mailto:kh.t705042000@gmail.com";
+        }
+
+        function goHome() {
+            window.location.href = "Homepage.html"; // Replace with your homepage URL
+        }
+    </script>
+</body>
+</html>

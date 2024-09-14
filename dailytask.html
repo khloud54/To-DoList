@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Day Plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('img/Screenshot 2024-09-07 133537.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .header {
+            background-color: rgba(108, 92, 231, 0.8); /* Slightly transparent background */
+            padding: 10px;
+            text-align: center;
+            color: white;
+        }
+
+        .header img {
+            width: 40px;
+            vertical-align: middle;
+        }
+
+        .header h1 {
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 32px;
+            margin: 0;
+        }
+
+        .header p {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.9); /* transparent background */
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            margin-left: 20px;
+            color: #6c5ce7;
+            text-decoration: none;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .navbar a.active:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #6c5ce7;
+        }
+
+        .navbar .theme-switcher {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .theme-switcher input {
+            display: none;
+        }
+
+        .navbar .theme-switcher label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .navbar .theme-switcher .slider {
+            width: 34px;
+            height: 20px;
+            background-color: #ccc;
+            border-radius: 50px;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+
+        .navbar .theme-switcher .slider:before {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: white;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+        }
+
+        .navbar .theme-switcher input:checked + label .slider {
+            background-color: #4b3ba8;
+        }
+
+        .navbar .theme-switcher input:checked + label .slider:before {
+            transform: translateX(14px);
+        }
+
+        .main-content {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent background */
+            color: #333;
+            border-radius: 10px;
+            margin: 20px;
+        }
+
+        .card {
+            background-color: #e9e3ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .card img {
+            width: 40px;
+            margin-right: 20px;
+        }
+
+        .card h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .quote {
+            margin-top: 30px;
+            font-style: italic;
+            color: #b8411d;
+            font-size: 18px;
+        }
+
+        .action-button {
+            background-color: #4b3ba8;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-button:hover {
+            background-color: #372b8d;
+        }
+
+        .social-icons {
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+            color: #6c5ce7;
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            color: #372b8d;
+        }
+
+        .footer {
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent background */
+            padding: 10px;
+            text-align: center;
+            color: #333;
+            font-size: 14px;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background: url('img/Screenshot 2024-09-07 133537.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #f2f2f2;
+        }
+
+        body.dark-mode .header {
+            background-color: rgba(60, 60, 60, 0.8);
+        }
+
+        body.dark-mode .navbar {
+            background-color: rgba(40, 40, 40, 0.8); /* Darker purple */
+        }
+
+        body.dark-mode .main-content {
+            background-color: rgba(60, 60, 60, 0.8);
+        }
+
+        body.dark-mode .social-icons a {
+            color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <img src="https://img.icons8.com/ios/452/todo-list.png" alt="To-Do List Logo">
+        <h1>Your Day Plan</h1>
+    </div>
+
+    <div class="navbar">
+        <a href="Homepage.html" id="homepage-link">Homepage</a>
+        <a href="dailytask.html" id="day-plan-link" class="active">Your Day Plan</a>
+        <a href="progress.html" id="progress-link">Your Progress</a>
+        <a href="AboutApp.html" id="about-link">About This App!</a>
+        <div class="theme-switcher">
+            <input type="checkbox" id="theme-toggle">
+            <label for="theme-toggle">
+                <div class="slider"></div>
+            </label>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1>Care About Your Daily Routine</h1>
+        <div class="card" onclick="showTasks()">
+            <img src="https://img.icons8.com/ios-filled/344/todo-list.png" alt="Tasks Icon">
+            <h2>Your Daily Tasks & Activities</h2>
+        </div>
+        <div class="card" onclick="showChecklist()">
+            <img src="https://img.icons8.com/ios-filled/344/checklist.png" alt="Checklist Icon">
+            <h2>Daily Routine Checklist</h2>
+        </div>
+        <div class="quote">
+            It is your commitment to the process that will determine your progress.
+        </div>
+        <button class="action-button" onclick="showProgress()">Your Activity and Task Progress</button>
+        <div class="social-icons">
+            <a href="https://www.youtube.com" target="_blank">YouTube</a>
+            <a href="https://www.linkedin.com" target="_blank">LinkedIn</a>
+            <a href="https://www.facebook.com" target="_blank">Facebook</a>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript functions to simulate the actions for the cards and button
+        function showTasks() {
+            window.location.href = 'EntryForm.html';  // Redirect to the Daily Task List Entry Form
+        }
+
+        function showChecklist() {
+            window.location.href = 'Checklist.html';  // Redirect to the Daily Routine Checklist Form
+        }
+
+        function showProgress() {
+            window.location.href = 'progress.html';  // Redirect to the Activity and Task Progress page
+        }
+
+        // Toggle dark mode with localStorage
+        const toggle = document.getElementById('theme-toggle');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            toggle.checked = true;
+        }
+
+        toggle.addEventListener('change', () => {
+            if (toggle.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+
+</html>

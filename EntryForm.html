@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entry Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            background-image: url('img/Screenshot 2024-09-09 203609.png'); /* Add your background image here */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        select, input[type="date"], input[type="time"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button.delete {
+            background-color: #dc3545;
+        }
+
+        button.delete:hover {
+            background-color: #c82333;
+        }
+
+        .add-task-button {
+            background-color: #28a745;
+        }
+
+        .add-task-button:hover {
+            background-color: #218838;
+        }
+
+        .tasks-container {
+            margin-top: 30px;
+        }
+
+        .task {
+            background: #e9ecef;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .task-check {
+            margin-right: 15px;
+        }
+
+        .task-details {
+            flex-grow: 1;
+        }
+
+        .remove-button {
+            background-color: #dc3545;
+            border: none;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .remove-button:hover {
+            background-color: #c82333;
+        }
+
+        .motivation-message {
+            color: green;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+
+        .motivation-message.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Entry Form</h1>
+        <form id="entryForm">
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="" disabled selected>Select a category</option>
+                <option value="work">Work</option>
+                <option value="personal">Personal</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="dueDate">Due Date:</label>
+            <input type="date" id="dueDate" name="dueDate" required>
+
+            <label for="dueTime">Due Time:</label>
+            <input type="time" id="dueTime" name="dueTime" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+
+            <label for="timeZone">Time Zone:</label>
+            <select id="timeZone" name="timeZone" required>
+                <option value="" disabled selected>Select a time zone</option>
+                <option value="GMT">GMT</option>
+                <option value="UTC">UTC</option>
+                <option value="EST">EST</option>
+                <option value="PST">PST</option>
+            </select>
+
+            <div class="button-group">
+                <button type="button" onclick="saveEntry()">Save</button>
+                <button type="button" onclick="deleteTasks()" class="delete">Delete All Tasks</button>
+                <button type="button" class="add-task-button" onclick="addTask()">Add Task</button>
+            </div>
+        </form>
+
+        <div class="tasks-container" id="tasksContainer">
+            <h2>Tasks</h2>
+        </div>
+
+        <div id="motivationMessage" class="motivation-message"></div>
+    </div>
+
+    <script>
+        // Function to load tasks from localStorage and display them
+        function loadTasks() {
+            const tasksContainer = document.getElementById('tasksContainer');
+            tasksContainer.innerHTML = '<h2>Tasks</h2>';
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach((task, index) => {
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'task';
+                taskDiv.innerHTML = `
+                    <input type="checkbox" class="task-check" id="taskCheck${index}" onclick="checkTask(${index})">
+                    <div class="task-details">
+                        <strong>Category:</strong> ${task.category}<br>
+                        <strong>Due Date:</strong> ${task.dueDate}<br>
+                        <strong>Due Time:</strong> ${task.dueTime}<br>
+                        <strong>Description:</strong> ${task.description}
+                    </div>
+                    <button class="remove-button" onclick="removeTask(${index})">Remove</button>
+                `;
+                tasksContainer.appendChild(taskDiv);
+            });
+        }
+
+        // Function to save tasks to localStorage
+        function saveEntry() {
+            const category = document.getElementById('category').value;
+            const dueDate = document.getElementById('dueDate').value;
+            const dueTime = document.getElementById('dueTime').value;
+            const description = document.getElementById('description').value;
+            const timeZone = document.getElementById('timeZone').value;
+
+            if (category && dueDate && dueTime && description && timeZone) {
+                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                tasks.push({ category, dueDate, dueTime, description, timeZone });
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                loadTasks(); // Refresh the task list
+            } else {
+                alert('Please fill out all fields.');
+            }
+        }
+
+        // Function to add task to the task container without saving
+        function addTask() {
+            const category = document.getElementById('category').value;
+            const dueDate = document.getElementById('dueDate').value;
+            const dueTime = document.getElementById('dueTime').value;
+            const description = document.getElementById('description').value;
+            const timeZone = document.getElementById('timeZone').value;
+
+            if (category && dueDate && dueTime && description && timeZone) {
+                const tasksContainer = document.getElementById('tasksContainer');
+
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'task';
+                taskDiv.innerHTML = `
+                    <input type="checkbox" class="task-check">
+                    <div class="task-details">
+                        <strong>Category:</strong> ${category}<br>
+                        <strong>Due Date:</strong> ${dueDate}<br>
+                        <strong>Due Time:</strong> ${dueTime}<br>
+                        <strong>Description:</strong> ${description}
+                    </div>
+                    <button class="remove-button" onclick="removeTask()">Remove</button>
+                `;
+
+                tasksContainer.appendChild(taskDiv);
+
+                // Clear form fields
+                document.getElementById('entryForm').reset();
+            } else {
+                alert('Please fill out all fields.');
+            }
+        }
+
+        // Function to delete all tasks from localStorage
+        function deleteTasks() {
+            localStorage.removeItem('tasks');
+            loadTasks(); // Refresh the task list
+        }
+
+        // Function to check if a task is done and display a motivational message
+        function checkTask(index) {
+            // List of motivational messages
+            const motivationalMessages = ["Awesome!", "Good Job!", "Keep it up!", "You're amazing!", "Fantastic!"];
+            
+            // Randomly select a motivational message
+            const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+            
+            // Show the motivational message
+            const motivationMessageElement = document.getElementById('motivationMessage');
+            motivationMessageElement.innerText = randomMessage;
+            motivationMessageElement.classList.add('show');
+            
+            // Remove the message after 40 seconds
+            setTimeout(() => {
+                motivationMessageElement.classList.remove('show');
+            }, 40000); // Show for 40 seconds as requested
+        }
+
+        // Function to remove a specific task
+        function removeTask(index) {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.splice(index, 1);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            loadTasks(); // Refresh the task list
+        }
+
+        // Load tasks on page load
+        window.onload = function() {
+            loadTasks();
+        };
+    </script>
+</body>
+</html>

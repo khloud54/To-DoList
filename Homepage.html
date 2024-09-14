@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e6e6fa; /* Light purple */
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .header {
+            background-color: #d0b6e0; /* Light purple */
+            padding: 10px;
+            text-align: center;
+            color: white;
+        }
+
+        .header img {
+            width: 40px;
+            vertical-align: middle;
+        }
+
+        .header h1 {
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 32px;
+            margin: 0;
+        }
+
+        .header p {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(75, 59, 168, 0.8); /* Dark purple with 80% opacity */
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            margin-left: 20px;
+            color: #f1f0fa;
+            text-decoration: none;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .navbar a.active:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #9f88b6;
+        }
+
+        .navbar .theme-switcher {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .theme-switcher input {
+            display: none;
+        }
+
+        .navbar .theme-switcher label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .navbar .theme-switcher .slider {
+            width: 34px;
+            height: 20px;
+            background-color: #ccc;
+            border-radius: 50px;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+
+        .navbar .theme-switcher .slider:before {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: white;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+        }
+
+        .navbar .theme-switcher input:checked + label .slider {
+            background-color: #4b3ba8;
+        }
+
+        .navbar .theme-switcher input:checked + label .slider:before {
+            transform: translateX(14px);
+        }
+
+        .main-content {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #c9c5e5;
+            color: white;
+        }
+
+        .main-content img {
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: block;
+            margin: 0 auto;
+        }
+
+        .main-content button {
+            background-color: #4b3ba8; /* Dark purple */
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .main-content button:hover {
+            background-color: #372b8d;
+        }
+
+        .social-icons {
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+            color: white;
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            color: #ddd;
+        }
+
+        .footer {
+            background-color: #f2f2f2;
+            padding: 10px;
+            text-align: center;
+            color: #333;
+            font-size: 14px;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #333;
+            color: #f2f2f2;
+        }
+
+        body.dark-mode .header {
+            background-color: #444;
+        }
+
+        body.dark-mode .navbar {
+            background-color: rgba(40, 40, 40, 0.8); /* Darker purple */
+        }
+
+        body.dark-mode .main-content {
+            background-color: #555;
+        }
+
+        body.dark-mode .social-icons a {
+            color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <img src="https://img.icons8.com/ios/452/todo-list.png" alt="To-Do List Logo">
+        <h1>To-Do List</h1>
+        <p>The Power On Your Side</p>
+    </div>
+
+    <div class="navbar">
+        <a href="Homepage.html" class="active">Homepage</a>
+        <a href="dailytask.html">Your Day Plan</a>
+        <a href="progress.html">Your Progress</a>
+        <a href="AboutApp.html">About This App!</a>
+        <div class="theme-switcher">
+            <input type="checkbox" id="theme-toggle">
+            <label for="theme-toggle">
+                <div class="slider"></div>
+            </label>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <img src="img/to do list background app.webp" alt="To-Do Illustration">
+        <button onclick="startJourney()">Start Your Journey</button>
+        <div class="social-icons">
+            <a href="https://www.youtube.com" target="_blank">YouTube</a>
+            <a href="https://www.linkedin.com" target="_blank">LinkedIn</a>
+            <a href="https://www.facebook.com" target="_blank">Facebook</a>
+        </div>
+    </div>
+
+    <script>
+        function startJourney() {
+            window.location.href = 'dailytask.html';  // Redirect to dailytask.html
+        }
+
+        // Toggle dark mode
+        const toggle = document.getElementById('theme-toggle');
+        toggle.addEventListener('change', () => {
+            document.body.classList.toggle('dark-mode', toggle.checked);
+        });
+    </script>    
+</body>
+
+</html>
